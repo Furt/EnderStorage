@@ -14,8 +14,8 @@ buildscript {
 //add dependency repositories
 repositories {
 	maven {
-		name = "Covers1624 Repo"
-		url = "http://adel.podgeweb.com:1616/maven"
+		name = "CB Repo"
+		url = "http://chickenbones.net/maven"
 	}
 }
 
@@ -38,7 +38,6 @@ configFile.withReader {
 dependencies {
     compile "codechicken:CodeChickenLib:${config.mc_version}-${config.ccl_version}:deobf"
     compile "codechicken:CodeChickenCore:${config.mc_version}-${config.ccc_version}:deobf"
-    compile "codechicken:NotEnoughItems:1.8.9-2.0.1.+:deobf"
 }
 
 version =  "${project.config.mod_version}." + System.getenv("BUILD_NUMBER") ?: "1"
@@ -49,6 +48,8 @@ minecraft {
     version = config.mc_version + "-" + config.forge_version
     mappings = config.mappings
 	makeObfSourceJar = false
+    replace '${mod_version}', project.config.mod_version
+    replaceIn "Reference.java"
 	runDir = "run"
 }
 
@@ -56,13 +57,13 @@ processResources {
     // Redo task if any of these properties change
     inputs.property "version", project.version
     inputs.property "mc_version", config.mc_version
-	
+
     // Replace properties in info files
     from(sourceSets.main.resources.srcDirs) {
         include '*.info'
         expand 'version':project.version,'mc_version':config.mc_version
     }
-	
+
 	// Move access transformer to META-INF
 	rename '(.+_at.cfg)', 'META-INF/$1'
 }
@@ -96,7 +97,7 @@ artifacts {
 uploadArchives {
     repositories {
         mavenDeployer {
-            repository(url: "file:///var/www/maven")
+            repository(url: "file://${local_maven}")
             pom {
                 groupId = project.group
                 version = project.version
@@ -105,20 +106,20 @@ uploadArchives {
                     name project.archivesBaseName
                     packaging 'jar'
                     description 'EnderStorage'
-                    url 'https://github.com/covers1624/EnderStorage'
+                    url 'https://github.com/TheCBProject/EnderStorage'
                     scm {
-                        url 'https://github.com/covers1624/EnderStorage'
-                        connection 'scm:git:git@github.com:covers1624/EnderStorage.git'
-                        developerConnection 'scm:git:git@github.com:covers1624/EnderStorage.git'
+                        url 'https://github.com/TheCBProject/EnderStorage'
+                        connection 'scm:git:git@github.com:TheCBProject/EnderStorage.git'
+                        developerConnection 'scm:git:git@github.com:TheCBProject/EnderStorage.git'
                     }
                     issueManagement {
                         system 'github'
-                        url 'https://github.com/covers1624/EnderStorage/issues'
+                        url 'https://github.com/TheCBProject/EnderStorage/issues'
                     }
                     licenses {
                         license {
                             name 'License'
-                            url 'https://raw.githubusercontent.com/covers1624/EnderStorage/master/LICENSE.txt'
+                            url 'https://raw.githubusercontent.com/TheCBProject/EnderStorage/master/LICENSE.txt'
                             distribution 'repo'
                         }
                     }
@@ -126,6 +127,11 @@ uploadArchives {
 						developer {
                             id 'chicken-bones'
                             name 'chicken-bones'
+                            roles { role 'developer' }
+                        }
+                        developer {
+                            id 'covers1624'
+                            name 'covers1624'
                             roles { role 'developer' }
                         }
                     }
